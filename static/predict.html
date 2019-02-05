@@ -1,0 +1,119 @@
+<DOCTYPE html>
+<html>
+    <head>
+         
+         <title> Richard Wanjohi, Ph.D Deep Learning </title>
+        <style>
+            * { 
+                font-size:20px;
+            }
+        </style>
+    </head>
+    <body style="background-color:#FFF8DC;" > 
+        <center> 
+        <p style='font-weight:bold; color:green; font-family:verdana' > Image Recognition using Deep Learning Model </p>
+        <br>
+
+        <input id='image-selector' type='file'>
+        <button id='predict-button' > Predict </button>
+        
+
+       <p> 
+       <style>
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 200px; 
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+<h2>Results</h2>
+
+<div class="row">
+  <div class="column" style="background-color:#bbc; border-style:solid; border-color: black; border-width:2px">
+    <h2> Predicted Object </h2>
+    <p> <span id='object-name'; style=' color:blue; font-family:Comic Sans MS;' ></span></p> 
+    <p> <span id='object-name2'; style=' color:blue; font-family:Comic Sans MS;' ></span></p> 
+    <p> <span id='object-name3'; style=' color:blue; font-family:Comic Sans MS;' ></span></p> 
+  </div>
+  <div class="column" style="background-color:#bbc; border-style:solid; border-color: black;border-width:2px">
+    <h2>Likelihood </h2>
+    <p> <span id='object-prediction'; style='font-weight:bold; color:blue' ></span> </p>
+    <p> <span id='object-prediction2'; style='font-weight:bold; color:blue' ></span> </p>
+    <p> <span id='object-prediction3'; style='font-weight:bold; color:blue' ></span> </p>
+  </div>
+</div>
+
+       </p>
+
+        <h2> Image </h2>
+        <img id='selected-image' src=""/>
+        </center>
+        <script src = 'https://code.jquery.com/jquery-3.3.1.min.js'></script>
+
+        <script>
+            //Triggering change event after the Image is selected from the Browse Button 
+            let base64Image;
+            $("#image-selector").change(function() {
+                let reader = new FileReader();
+                reader.onload = function(e){
+                    let dataURL = reader.result;
+                    $('#selected-image').attr("src", dataURL);
+                    base64Image = dataURL.replace(/^data:image\/(png|jpeg);base64,/, "");
+                    console.log(base64Image);
+                }
+
+               // read the file from the file object
+                reader.readAsDataURL($("#image-selector")[0].files[0]);
+                // the following clears the texts on the page when you select the next image
+                $("#object-name").text("");
+                $("#object-prediction").text("");
+                $("#object-name2").text("");
+                $("#object-prediction2").text("");
+                $("#object-name3").text("");
+                $("#object-prediction3").text("");
+
+
+                });
+
+            $("#predict-button").click(function(event){
+                let message = {
+                    image: base64Image
+                }
+                console.log(message);
+                $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
+                    $("#object-name").text(response.predictions.label_1);
+                    $("#object-prediction").text(response.predictions.probability_1.toFixed(4));
+
+                    $("#object-name2").text(response.predictions.label_2);
+                    $("#object-prediction2").text(response.predictions.probability_2.toFixed(4));
+
+                    $("#object-name3").text(response.predictions.label_3);
+                    $("#object-prediction3").text(response.predictions.probability_3.toFixed(4));
+
+                    console.log(response);
+
+                });
+            });
+        </script>
+    </body>
+    </html>
+    
+                                     
+                  
+                
+        
+               
+    
