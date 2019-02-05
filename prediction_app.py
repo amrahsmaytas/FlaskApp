@@ -22,7 +22,6 @@ from keras.applications import imagenet_utils
 import tensorflow as tf
 import codecs, json 
 
-# Just disables the warning, doesn't enable AVX/FMA
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     
@@ -38,7 +37,6 @@ def load_model():
     print('--- Model loaded! --- \n')
     print ('='*50)
     graph = tf.get_default_graph()
-#model = No
 
 
 def prepare_image(image, target_size):
@@ -56,12 +54,12 @@ def prepare_image(image, target_size):
 
     # return the processed image
     return image
+
 cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:port"}})
 @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 @app.route('/predict', methods = ['GET', 'POST']) 
 def predict():
     # initialize the data dictionary that will be returned
-    # view
     message = request.get_json(force = True)
     encoded = message['image']
     decoded = base64.b64decode(encoded)
@@ -69,32 +67,24 @@ def predict():
         image  = Image.open(io.BytesIO(decoded))
         if image is not None:
             processed_image = prepare_image(image, target_size = (224, 224))
-            prediction = model.predict(processed_image)#.tolist()
+            prediction = model.predict(processed_image)
             prediction = decode_predictions(prediction, top= 3)
         
             response = {
                 'predictions':{
-                    'probability_1': np.array(prediction[0][0][2]).tolist(),   #prediction[0][0][2]  
+                    'probability_1': np.array(prediction[0][0][2]).tolist(),   
                     'label_1': np.array(prediction[0][0][1]).tolist(),
                 
-                    'probability_2': np.array(prediction[0][1][2]).tolist(),   #prediction[0][0][2]  
+                    'probability_2': np.array(prediction[0][1][2]).tolist(),    
                     'label_2': np.array(prediction[0][1][1]).tolist(),
                 
-                    'probability_3': np.array(prediction[0][2][2]).tolist(),   #prediction[0][0][2]  
+                    'probability_3': np.array(prediction[0][2][2]).tolist(),   
                     'label_3': np.array(prediction[0][2][1]).tolist()
                 }
             }
-        
-#             response ={}
-#             response["predictions"] = []
-
-#             for i, (imagenetID, label, prob) in enumerate(prediction[0]):
-#                 r = {"label_{}".format(i): label, "probability_{}".format(i): float(prob)}
-#                 response["predictions"].append(r)
-
 
          # return the data dictionary as a JSON response
-            return jsonify(response) ## response
+            return jsonify(response) 
         else:
             return None, 'Error loading Image file'
 
