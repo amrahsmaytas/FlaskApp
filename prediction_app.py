@@ -50,7 +50,8 @@ def prepare_image(image, target_size):
     image = image.resize(target_size)
     image = img_to_array(image)
     image = np.expand_dims(image, axis=0)
-    image = Inception_preprocess_input(image)
+    image = Inception_preprocess_input(image) ## for pre-trained models, use preprocess input in line with  the model  used. 
+                                              ## For custom model can use imagenet_utils.preprocess_input()
 
     # return the processed image
     return image
