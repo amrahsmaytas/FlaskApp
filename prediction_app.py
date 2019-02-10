@@ -33,7 +33,7 @@ app = Flask(__name__)
 
 def load_model():
     global model, graph
-    model = MobileNet(weights="imagenet")
+    model = InceptionV3(weights="imagenet")
     print('--- Model loaded! --- \n')
     print ('='*50)
     graph = tf.get_default_graph()

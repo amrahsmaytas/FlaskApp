@@ -14,7 +14,7 @@
         <p style='font-weight:bold; color:green; font-family:verdana' > Image Recognition using Deep Learning Model </p>
         <br>
 
-        <input id='image-selector' type='file'>
+        <input id='Img-selector' type='file'>
         <button id='predict-button' > Predict </button>
         
 
@@ -59,24 +59,24 @@
        </p>
 
         <h2> Image </h2>
-        <img id='selected-image' src=""/>
+        <img id='selected-Img' src=""/>
         </center>
         <script src = 'https://code.jquery.com/jquery-3.3.1.min.js'></script>
 
         <script>
             //Triggering change event after the Image is selected from the Browse Button 
-            let base64Image;
-            $("#image-selector").change(function() {
+            let base64Img;
+            $("#Img-selector").change(function() {
                 let reader = new FileReader();
                 reader.onload = function(e){
                     let dataURL = reader.result;
-                    $('#selected-image').attr("src", dataURL);
-                    base64Image = dataURL.replace(/^data:image\/(png|jpeg);base64,/, "");
-                    console.log(base64Image);
+                    $('#selected-Img').attr("src", dataURL);
+                    base64Img = dataURL.replace(/^data:image\/(png|jpeg);base64,/, "");
+                    console.log(base64Img);
                 }
 
                // read the file from the file object
-                reader.readAsDataURL($("#image-selector")[0].files[0]);
+                reader.readAsDataURL($("#Img-selector")[0].files[0]);
                 // the following clears the texts on the page when you select the next image
                 $("#object-name").text("");
                 $("#object-prediction").text("");
@@ -90,7 +90,7 @@
 
             $("#predict-button").click(function(event){
                 let message = {
-                    image: base64Image
+                    image: base64Img
                 }
                 console.log(message);
                 $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
